@@ -1,0 +1,137 @@
+<html>
+<head/>
+<body>
+<p>1. Задать координаты вершин многоугольника с помощью 
+	предопределенного массива или мышью;</p>
+<p>2. Построить многоугольник отобразив стороны с помощью алгоритма Брезенхема</p>
+<p>3. Заполнить многоугольник методом заполнения с затравкой</p>
+<p>4. Заполнить многоугольник методом заполнения пересечением горизонтальных линий</p>
+
+<script>
+	var ylist = [];
+	function abs(a) 
+	{
+		if (a>=0) return a;
+		else return -1*a;
+	}
+	function line1(ctx, a0, b0, a1, b1, or1) 
+	{
+		var delta = 0;
+		var y = 0;
+		for (x = 0; x<(a1-a0); x++) 
+		{
+			if (delta>=(a1-a0)) 
+			{
+				y++;
+				delta-=2*(a1-a0);	
+			}
+			delta+=2*or1*(b1-b0);
+			if (!ylist[b0+or1*y]) 
+			{
+				ylist[b0+or1*y] = new Array();
+				ctx.fillStyle='#FF0000';
+			} 
+			else ctx.fillStyle='#000000';
+			ylist[b0+or1*y].push(a0+x);
+			ctx.fillRect(a0+x, b0+or1*y, 1, 1);
+		}
+	}
+	function line2(ctx, a0, b0, a1, b1, or1) 
+	{
+		var delta = 0;
+		var x = 0;
+		for (y = 0; y<(b1-b0); y++) 
+		{
+			if (delta>=(b1-b0)) 
+			{
+				x++;
+				delta-=2*(b1-b0);	
+			}
+			delta+=2*or1*(a1-a0);
+			if (!ylist[b0+y]) 
+			{
+				ylist[b0+y] = new Array();
+				ctx.fillStyle='#FF0000';
+			} 
+			else ctx.fillStyle='#000000';
+			if (y) 
+			{
+				ylist[b0+y].push(a0+or1*x);
+			}
+			ctx.fillRect(a0+or1*x, b0+y, 1, 1);
+		}
+	}
+	function draw_line(ctx, x0, y0, x1, y1) 
+	{
+		var a0, b0, a1, b1;
+		if (abs(x1-x0)>abs(y1-y0)) 
+		{
+			if (x0<x1) { a0=x0; b0=y0; a1=x1; b1=y1;
+		}
+			else 
+			{
+				 a0=x1; b0=y1; a1=x0; b1=y0;
+			}
+			if (b1>=b0) line1(ctx, a0, b0, a1, b1, 1);
+			else line1(ctx, a0, b0, a1, b1, -1);
+		} 
+		else 
+		{
+			if (y0<y1) 
+			{
+				 a0=x0; b0=y0; a1=x1; b1=y1;
+			}
+			else 
+			{
+				 a0=x1; b0=y1; a1=x0; b1=y0;
+			}
+			if (a1>=a0) line2(ctx, a0, b0, a1, b1, 1);
+			else 
+			{
+				line2(ctx, a0, b0, a1, b1, -1);
+			}
+		}
+	}
+</script>
+<script>
+		var arr = [];
+		var num = 0;
+		var end = 0;
+		function onClick() 
+		{
+			if (event.which == 1) 
+			{
+				if (!end) 
+				{
+					ctx.fillRect(event.offsetX, event.offsetY, 1, 1);
+					arr[num*2] = event.offsetX; arr[num*2+1] = event.offsetY;
+					if (num) draw_line(ctx, arr[(num-1)*2], arr[num*2-1], 
+							arr[num*2], arr[num*2+1]);
+					num++;
+				} 
+				else 
+				{
+					ylist[event.offsetY].sort();
+					draw_line(ctx, ylist[event.offsetY][0], event.offsetY,
+						ylist[event.offsetY][1], event.offsetY);
+				}
+			} 
+			else if (event.which == 2)
+			{
+				draw_line(ctx, arr[(num-1)*2], arr[num*2-1], 
+						arr[0], arr[1]);
+				end = 1;
+			}			
+		}
+</script>
+
+<canvas id='less02' width='1000' height='1000'>
+	<script>
+		var canvas = document.getElementById('less02');
+		var ctx = canvas.getContext('2d');
+		canvas.addEventListener('click', onClick, false);
+	</script>
+</canvas>
+</body>
+</html>
+	
