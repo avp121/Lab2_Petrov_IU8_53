@@ -97,31 +97,46 @@
 		var arr = [];
 		var num = 0;
 		var end = 0;
+		var Mode=0;
+		var i=0;
+		var Min=1000, Max=0;
+	
+
 		function onClick() 
 		{
-			if (event.which == 1) 
+					if (!end) 
+					{
+						if (event.offsetY<Min) Min=event.offsetY;
+						if (event.offsetY>Max) Max=event.offsetY;
+						ctx.fillRect(event.offsetX, event.offsetY, 1, 1);
+						arr[num*2] = event.offsetX; arr[num*2+1] = event.offsetY;
+						if (num) draw_line(ctx, arr[(num-1)*2], arr[num*2-1], 
+						arr[num*2], arr[num*2+1]);
+						num++;
+					} 
+					else 
+					{
+						ylist[event.offsetY].sort();
+						for (i=Min; i<Max; i++)
+						{
+							draw_line(ctx, ylist[i][0], i, ylist[i][1], i);
+						}
+					}
+				
+						
+			
+			
+		}
+
+		function Ender() 
+		{
+  			if (end==0)
 			{
-				if (!end) 
-				{
-					ctx.fillRect(event.offsetX, event.offsetY, 1, 1);
-					arr[num*2] = event.offsetX; arr[num*2+1] = event.offsetY;
-					if (num) draw_line(ctx, arr[(num-1)*2], arr[num*2-1], 
-							arr[num*2], arr[num*2+1]);
-					num++;
-				} 
-				else 
-				{
-					ylist[event.offsetY].sort();
-					draw_line(ctx, ylist[event.offsetY][0], event.offsetY,
-						ylist[event.offsetY][1], event.offsetY);
-				}
-			} 
-			else if (event.which == 2)
-			{
-				draw_line(ctx, arr[(num-1)*2], arr[num*2-1], 
-						arr[0], arr[1]);
+				if (event.offsetY<Min) Min=event.offsetY;
+				if (event.offsetY>Max) Max=event.offsetY;
+				draw_line(ctx, arr[(num-1)*2], arr[num*2-1], arr[0], arr[1]);
 				end = 1;
-			}			
+			}
 		}
 </script>
 
@@ -130,6 +145,8 @@
 		var canvas = document.getElementById('less02');
 		var ctx = canvas.getContext('2d');
 		canvas.addEventListener('click', onClick, false);
+		canvas.addEventListener('dblclick', Ender, false);
+
 	</script>
 </canvas>
 </body>
