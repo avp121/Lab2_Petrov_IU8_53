@@ -5,6 +5,7 @@
 	предопределенного массива или мышью;</p>
 <p>2. Построить многоугольник отобразив стороны с помощью алгоритма Брезенхема</p>
 <p>3. Заполнить многоугольник методом заполнения с затравкой</p>
+<p>4. Заполнить многоугольник методом заполнения пересечением горизонтальных линий</p>
 
 <script>
 	var ylist = [];
@@ -103,9 +104,9 @@
 		function CheckColor (ctx, px, py)
 		{
 			var Pixel=ctx.getImageData(px, py, 1, 1);
-			alert("Pixel: "+ Pixel.data[0]+", "+Pixel.data[1]+", "+ Pixel.data[2]);
-			if (Pixel.data[0]==0 && Pixel.data[1]==0 && Pixel.data[2]==0) return 1;
-			else return 0;
+			//alert("Pixel: "+ Pixel.data[0]+", "+Pixel.data[1]+", "+ Pixel.data[2]);
+			if (Pixel.data[3]==0) return 0;
+			else return 1;
 		}
 
 		function Zatravka (ctx, a, b)
